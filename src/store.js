@@ -1,5 +1,4 @@
-import { createStore } from "redux";
-
+import { combineReducers, createStore } from "redux";
 
 const initialStateAccount = {
     balance: 0,
@@ -7,8 +6,13 @@ const initialStateAccount = {
     loanPurpose: "",
 };
 
+const initialStateCustomer = {
+    fullName: '',
+    aadharID: '',
+    createdAt: '',
+};
 
-function reducer(state = initialStateAccount, action) {
+function accountReducer(state = initialStateAccount, action) {
     switch(action.type) {
         case "account/deposit":
             return {
@@ -43,8 +47,32 @@ function reducer(state = initialStateAccount, action) {
 
 }
 
-const store = createStore(reducer)
+function customerReducer(state = initialStateCustomer, action) {
+    switch(action.type) {
+        case "customer/createCustomer":
+            return {
+                ...state,
+                fullName: action.payload.fullName,
+                aadharID: action.payload.aadharID,
+                createdAt: action.payload.createdAt,
+            };
 
+        case "customer/updateName":
+            return {
+                ...state,
+                fullName: action.payload,
+            };
+
+        default: return state;
+    }
+}
+
+const rootReducer = combineReducers({
+    account: accountReducer,
+    customer: customerReducer,
+});
+
+const store = createStore(rootReducer);
 
 function deposit(amount) {
     return {type: 'account/deposit', payload: amount};
@@ -74,4 +102,29 @@ store.dispatch(requestLoan(500, "Purchase a Villa"));
 console.log(store.getState());
 
 store.dispatch(payLoan());
+console.log(store.getState());
+
+
+function createCustomer(fullName, aadharID) {
+    return {
+        type: "customer/createCustomer",
+        payload: {
+            fullName,
+            aadharID,
+            createdAt: new Date().toISOString()
+        }
+    };
+}
+
+function updateName(fullName) {
+    return {
+        type: "customer/updateName",
+        payload: fullName,
+    };
+}
+
+store.dispatch(createCustomer('John Doe', '687687687624'));
+console.log(store.getState());
+
+store.dispatch(updateName('Jane Smith'));
 console.log(store.getState());
