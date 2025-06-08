@@ -1,10 +1,19 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { createCustomer } from './customerSlice';
 
 function Customer() {
   const [fullName, setFullName] = useState("");
-  const [nationalId, setNationalId] = useState("");
+  const [aadharID, setNationalId] = useState("");
 
-  function handleClick() {}
+  const dispatch = useDispatch();
+
+  function handleClick() {
+    if (!fullName || !aadharID) return;
+
+    dispatch(createCustomer(fullName, aadharID));
+  }
 
   return (
     <div>
@@ -18,9 +27,9 @@ function Customer() {
           />
         </div>
         <div>
-          <label>National ID</label>
+          <label>Aadhar ID</label>
           <input
-            value={nationalId}
+            value={aadharID}
             onChange={(e) => setNationalId(e.target.value)}
           />
         </div>
