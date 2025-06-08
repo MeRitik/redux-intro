@@ -18,14 +18,15 @@ function AccountOperations() {
   const [currency, setCurrency] = useState("INR");
 
   const disptch = useDispatch();
-  const { loan: currentLoan, loanPurpose: currentLoanPurpose, balance } = useSelector(state => state.account);
+  const { loan: currentLoan, loanPurpose: currentLoanPurpose, balance, isLoading } = useSelector(state => state.account);
 
   function handleDeposit() {
     if (!depositAmount)
       return;
 
-    disptch(deposit(depositAmount));
+    disptch(deposit(depositAmount, currency));
     setDepositAmount("");
+    setCurrency("INR");
   }
 
   function handleWithdrawal() {
@@ -64,10 +65,10 @@ function AccountOperations() {
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
           >
-            {currencies.map(currency => <option value={currency.id}>{currency.name}</option>)}
+            {currencies.map(currency => <option key={currency.id} value={currency.id}>{currency.name}</option>)}
           </select>
 
-          <button onClick={handleDeposit}>Deposit {depositAmount}</button>
+          <button onClick={handleDeposit} disabled={isLoading}>{isLoading ? "Converting..." : "Deposit"} {depositAmount}</button>
         </div>
 
         <div>
