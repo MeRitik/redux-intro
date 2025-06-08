@@ -24,7 +24,8 @@ function AccountOperations() {
     if (!depositAmount)
       return;
 
-    disptch(deposit(depositAmount, currency));
+    disptch(deposit(depositAmount));
+    // disptch(deposit(depositAmount, currency));
     setDepositAmount("");
     setCurrency("INR");
   }
